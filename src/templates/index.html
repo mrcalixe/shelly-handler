@@ -1,0 +1,38 @@
+{%- extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <br>
+    <h1>Welcome to Home Manager</h1>
+    <br>
+    {% if database_devices %}
+    <h3>Devices</h3>
+     <form action="/set-all-mqtt" method="post">
+      <button type="submit" class="btn btn-primary">Set MQTT of all devices</button>
+    </form>
+    <form action="/generate-all-mqtt" method="post">
+      <button type="submit" class="btn btn-primary">Generate all MQTT discovery</button>
+    </form>
+    <br>
+    {{ render_table(
+        database_devices,
+        titles=[
+            ('name', 'Name'),
+            ('address', 'IP'),
+            ('friendly_name', 'Friendly Name'),
+            ('device_type', 'Type'),
+            ('supported', 'Supported')
+        ],
+        show_actions=True,
+        responsive=True,
+        model=BaseDevice,
+        custom_actions=[
+            ('Generate MQTT', 'gear', ('generate_mqtt', [('device_id', ':id')])),
+            ('Set MQTT config', 'hdd-rack', ('set_mqtt', [('device_id', ':id')])),
+            ('Get settings', 'sliders', ('get_settings', [('device_id', ':id')])),
+        ]) }}
+    {% else %}
+    <h3>No Device configured</h3>
+    {% endif %}
+</div>
+{%- endblock -%}

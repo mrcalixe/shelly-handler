@@ -1,0 +1,28 @@
+{%- extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    {{ render_messages() }}
+     <form action="/discovery/reload" method="get">
+      <button type="submit" class="btn btn-primary">Refresh devices</button>
+    </form>
+    {% if discovered_devices %}
+    <h1>Discovered Devices</h1>
+    <br>
+    {{ render_table(discovered_devices,
+        titles=[('id', 'ID'), ('name', 'Name'), ('address', 'IP'), ('friendly_name', 'Friendly Name'), ('device_type', 'Type'), ('supported', 'Supported')],
+        show_actions=True,
+        model=BaseDevice,
+        custom_actions=[('Add', 'plus-circle', ('add_device', [('device_id', ':id')]))]
+    ) }}
+
+    <form class="form" method="post" role="form">
+
+        <button type="submit" class="btn btn-primary">Save devices</button>
+    </form>
+    {% else %}
+    <h3>No Device found</h3>
+    {% endif %}
+</div>
+{%- endblock -%}
+
